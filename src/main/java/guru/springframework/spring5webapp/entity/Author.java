@@ -1,17 +1,41 @@
 package guru.springframework.spring5webapp.entity;
 
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * Created by Neekhil on 22 Jan 2021
+ */
+
+@Entity
 public class Author {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long Id;
+
     private String firstName;
     private String lastName;
-    private Set<Book> books;
+
+    @ManyToMany(mappedBy = "authors")
+    private Set<Book> books = new HashSet<>();
 
     public Author() {
     }
-    public Author(String firstName, String lastName, Set<Book> books) {
+
+    public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.books = books;
+
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
     }
     public String getFirstName() {
         return firstName;
@@ -37,7 +61,28 @@ public class Author {
         this.books = books;
     }
 
+    @Override
+    public String toString() {
+        return "Author{" +
+                "Id=" + Id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", books=" + books +
+                '}';
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Author author = (Author) o;
 
+        return Id != null ? Id.equals(author.Id) : author.Id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return Id != null ? Id.hashCode() : 0;
+    }
 }
